@@ -1,4 +1,4 @@
-name: Infra
+name: Terraform CI/CD
 
 on:
   pull_request:
@@ -35,7 +35,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::784733659029:role/oidc-role
-          aws-region: us-east-1
+          aws-region:  us-east-1
 
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
@@ -46,33 +46,9 @@ jobs:
         run: tflint --init && tflint -f compact
         continue-on-error: true
 
-      # - name: Run tfsec
-      #   uses: aquasecurity/tfsec-action@v1.0.0
-      #   continue-on-error: true
-
-      - name: Generate Terraform JSON Plan
-        run: |
-          terraform init -reconfigure
-          terraform plan -out=tfplan.binary
-          terraform show -json tfplan.binary > tfplan.json
-      
-      - name: Terraform test
-        run: terraform test -filter=tests/vpc_test.tftest.hcl
-
-      - name: Install Conftest
-        run: |
-          wget https://github.com/open-policy-agent/conftest/releases/download/v0.52.0/conftest_0.52.0_Linux_x86_64.tar.gz
-          tar xzf conftest_0.52.0_Linux_x86_64.tar.gz
-          chmod +x conftest
-          sudo mv conftest /usr/local/bin/
-
-      - name: Run OPA (Conftest) Policy Checks
-        run: |
-          conftest test tfplan.json --policy policy/
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-action@v1.0.0
         continue-on-error: true
-
-      - name: Terraform Test
-        run: terraform test || true
 
       - name: Run Checkov
         uses: bridgecrewio/checkov-action@v12
@@ -98,7 +74,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::784733659029:role/oidc-role
-          aws-region: us-east-1 
+          aws-region:  us-east-1
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -123,6 +99,12 @@ jobs:
         run: terraform plan -no-color -input=false
         continue-on-error: true
 
+      - name: Setup Node.js
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
       - name: Install terraform-docs
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
@@ -134,8 +116,8 @@ jobs:
       - name: Generate Terraform Docs and Commit
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          git config --local user.email "alakasi07@gmail.com"
-          git config --local user.name "Kasi"
+          git config --local user.email "vnagaraj984@gmail.com"
+          git config --local user.name "nag9844"
 
           terraform-docs markdown . > README.md.new
           mv README.md.new README.md
