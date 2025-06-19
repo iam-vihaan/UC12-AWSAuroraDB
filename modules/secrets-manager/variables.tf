@@ -18,7 +18,7 @@ variable "username" {
 variable "password_length" {
   description = "Length of the generated password"
   type        = number
-  default     = 16
+  default     = 18
 }
 
 variable "recovery_window_in_days" {
