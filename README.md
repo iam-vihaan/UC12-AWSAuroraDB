@@ -54,7 +54,7 @@ No resources.
 | <a name="input_kms_key_id"></a> [kms\_key\_id](#input\_kms\_key\_id) | The ARN for the KMS encryption key (if not creating new one) | `string` | `null` | no |
 | <a name="input_monitoring_interval"></a> [monitoring\_interval](#input\_monitoring\_interval) | The interval for collecting enhanced monitoring metrics | `number` | `60` | no |
 | <a name="input_parameter_group_family"></a> [parameter\_group\_family](#input\_parameter\_group\_family) | The DB parameter group family | `string` | `"aurora-mysql8.0"` | no |
-| <a name="input_password_length"></a> [password\_length](#input\_password\_length) | Length of the generated password | `number` | `16` | no |
+| <a name="input_password_length"></a> [password\_length](#input\_password\_length) | Length of the generated password | `number` | `18` | no |
 | <a name="input_performance_insights_enabled"></a> [performance\_insights\_enabled](#input\_performance\_insights\_enabled) | Specifies whether Performance Insights are enabled | `bool` | `true` | no |
 | <a name="input_performance_insights_kms_key_id"></a> [performance\_insights\_kms\_key\_id](#input\_performance\_insights\_kms\_key\_id) | The ARN for the KMS key to encrypt Performance Insights data | `string` | `null` | no |
 | <a name="input_preferred_backup_window"></a> [preferred\_backup\_window](#input\_preferred\_backup\_window) | The preferred backup window | `string` | `"03:00-04:00"` | no |
