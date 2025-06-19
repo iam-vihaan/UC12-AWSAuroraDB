@@ -7,13 +7,18 @@ resource "random_password" "db_password" {
   numeric = true
 }
 
-# Create the secret in AWS Secrets Manager
+# Create the secret in AWS Secrets Manager with a unique name
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name                    = var.secret_name
+  name                    = "${var.secret_name}-${random_id.suffix.hex}"
   description             = var.secret_description
   recovery_window_in_days = var.recovery_window_in_days
-  
+
   tags = var.tags
+}
+
+# Generate a random suffix to avoid name collisions
+resource "random_id" "suffix" {
+  byte_length = 4
 }
 
 # Store the credentials in the secret
@@ -28,7 +33,7 @@ resource "aws_secretsmanager_secret_version" "db_credentials" {
 # Create IAM policy for accessing the secret
 resource "aws_iam_policy" "secrets_access" {
   count = var.create_access_policy ? 1 : 0
-  
+
   name        = "${var.secret_name}-access-policy"
   description = "Policy to access database credentials secret"
 
